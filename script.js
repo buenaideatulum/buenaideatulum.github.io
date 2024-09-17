@@ -1,104 +1,45 @@
-// Importa las funciones necesarias de Firebase
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+// Confirmación de carga del archivo script.js
+console.log("El archivo script.js ha sido cargado.");
 
-// Configuración de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDJg1Kag-ttvBkWI-AO2Mvsj4GnSRbd74E",
-  authDomain: "authenticationqr-a08d4.firebaseapp.com",
-  projectId: "authenticationqr-a08d4",
-  storageBucket: "authenticationqr-a08d4.appspot.com",
-  messagingSenderId: "230256201537",
-  appId: "1:230256201537:web:7696b4351c13d4e95a9bc0",
-  measurementId: "G-LQD0PNH8PT"
-};
-
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-
-// Función para registrar usuarios
+// Registro de usuario
 document.getElementById('register-btn').addEventListener('click', () => {
+    console.log('Botón de registro presionado');
     const username = document.getElementById('register-username').value;
     const password = document.getElementById('register-password').value;
 
-    createUserWithEmailAndPassword(auth, username, password)
-    .then((userCredential) => {
+    if (username && password) {
+        // Guarda el usuario en localStorage
+        localStorage.setItem(username, JSON.stringify({ password: password, score: 0 }));
         alert('Registro exitoso. Ahora puedes iniciar sesión.');
-    })
-    .catch((error) => {
-        console.error('Error en el registro:', error);
-        alert('Error en el registro.');
-    });
+        console.log(`Usuario registrado: ${username}`);
+    } else {
+        alert('Por favor, completa los campos.');
+        console.log('Faltan datos en el formulario de registro');
+    }
 });
 
-// Función para iniciar sesión
+// Inicio de sesión
 document.getElementById('login-btn').addEventListener('click', () => {
+    console.log('Botón de inicio de sesión presionado');
     const username = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
 
-    signInWithEmailAndPassword(auth, username, password)
-    .then((userCredential) => {
-        const user = userCredential.user;
+    const user = JSON.parse(localStorage.getItem(username));
+
+    if (user && user.password === password) {
+        // Inicio de sesión exitoso
+        currentUser = username;
+        score = user.score;
         document.getElementById('auth').style.display = 'none';
         document.getElementById('app').style.display = 'block';
-        document.getElementById('user-name').textContent = user.email;
+        document.getElementById('user-name').textContent = username;
+        scoreDisplay.textContent = score;
         startCamera();
-    })
-    .catch((error) => {
-        console.error('Error al iniciar sesión:', error);
+        console.log(`Usuario ${username} inició sesión con éxito`);
+    } else {
         alert('Usuario o contraseña incorrectos.');
-    });
-});
-
-// Función para acceder a la cámara
-function startCamera() {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } } })
-    .then(stream => {
-        const video = document.getElementById('video');
-        video.srcObject = stream;
-    })
-    .catch(error => {
-        console.error('Error al acceder a la cámara:', error);
-        alert('No se puede acceder a la cámara, verifica los permisos.');
-    });
-}
-
-// Función para tomar la foto y escanear el código QR
-document.getElementById('take-photo').addEventListener('click', () => {
-    const canvas = document.getElementById('canvas');
-    const video = document.getElementById('video');
-    const context = canvas.getContext('2d');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
-    
-    if (qrCode) {
-        document.getElementById('output').textContent = `Código QR detectado: ${qrCode.data}`;
-        if (qrCode.data === "1") {
-            updateScore(1);
-        } else if (qrCode.data === "0") {
-            updateScore(0);
-            alert('¡Lo lograste! Tienes un café gratis hoy.');
-        }
-    } else {
-        document.getElementById('output').textContent = 'No se detectó ningún código QR.';
+        console.log('Datos incorrectos en el inicio de sesión');
     }
 });
 
-// Función para actualizar el marcador del usuario
-function updateScore(points) {
-    const scoreDisplay = document.getElementById('score');
-    let currentScore = parseInt(scoreDisplay.textContent);
-
-    if (points === 0) {
-        currentScore = 0;
-    } else {
-        currentScore += points;
-    }
-
-    scoreDisplay.textContent = currentScore;
-}
+// Aquí irían las demás funciones como el escaneo de QR
