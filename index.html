@@ -13,6 +13,8 @@
 </head>
 <body>
 
+    <div id="debug-info">Cargando...</div>
+
     <!-- Formulario de registro -->
     <div id="auth">
         <h1>Registrarse / Iniciar Sesión</h1>
@@ -31,9 +33,24 @@
         </div>
     </div>
 
+    <!-- Aplicación principal -->
+    <div id="app">
+        <h1>Bienvenido, <span id="user-name"></span></h1>
+        <p>Marcador: <span id="score">0</span></p>
+        <video id="video" autoplay playsinline></video>
+        <button id="take-photo">Escanear Código QR</button>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <img id="photo" src="" alt="Foto tomada" style="display: none;">
+        <div id="output">Esperando código QR...</div>
+    </div>
+
     <!-- Incluye la biblioteca jsQR -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
     <script src="script.js"></script>
 
+    <script>
+        // Mensaje de depuración
+        document.getElementById('debug-info').textContent = "script.js ha sido cargado.";
+    </script>
 </body>
 </html>
