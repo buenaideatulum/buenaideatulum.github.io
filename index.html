@@ -3,18 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mostrar Cámara</title>
+    <title>Tomar Foto</title>
     <style>
         #video {
             width: 100%;
             height: auto;
             border: 1px solid black;
         }
+        #canvas {
+            display: none; /* Oculta el canvas */
+        }
+        #photo {
+            display: block;
+            margin-top: 20px;
+            border: 1px solid black;
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
-    <h1>Vista de la Cámara</h1>
+    <h1>Tomar Foto</h1>
     <video id="video" autoplay></video>
+    <button id="take-photo">Tomar Foto</button>
+    <canvas id="canvas"></canvas>
+    <img id="photo" src="" alt="Foto tomada">
 
     <script>
         // Accede a la cámara del usuario
@@ -26,6 +39,23 @@
             .catch(error => {
                 console.error('Error al acceder a la cámara: ', error);
             });
+
+        document.getElementById('take-photo').addEventListener('click', () => {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const photo = document.getElementById('photo');
+
+            // Configura el canvas para el tamaño del video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Dibuja la imagen del video en el canvas
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Obtén la imagen del canvas y actualiza el elemento de imagen
+            photo.src = canvas.toDataURL('image/png');
+        });
     </script>
 </body>
 </html>
