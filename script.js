@@ -1,6 +1,6 @@
+// Importa e inicializa Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 
 // Tu configuración de Firebase
 const firebaseConfig = {
@@ -16,67 +16,58 @@ const firebaseConfig = {
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
 
-// Registro
-document.getElementById('register-btn').addEventListener('click', async () => {
-    const username = document.getElementById('register-username').value;
+// Elementos del DOM
+const registerBtn = document.getElementById('register-btn');
+const loginBtn = document.getElementById('login-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const appDiv = document.getElementById('app');
+const authDiv = document.getElementById('auth');
+const userNameSpan = document.getElementById('user-name');
+
+// Registro de usuario
+registerBtn.addEventListener('click', async () => {
+    const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
 
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, username + "@example.com", password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        await setDoc(doc(db, "users", user.uid), { username, score: 0 });
-        alert('Registro exitoso. Ahora puedes iniciar sesión.');
+        alert('Registro exitoso');
+        console.log(`Usuario registrado: ${user.email}`);
     } catch (error) {
-        alert('Error en el registro: ' + error.message);
+        alert(`Error en el registro: ${error.message}`);
+        console.error(error);
     }
 });
 
 // Inicio de sesión
-document.getElementById('login-btn').addEventListener('click', async () => {
-    const username = document.getElementById('login-username').value;
+loginBtn.addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, username + "@example.com", password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        const docSnap = await getDoc(doc(db, "users", user.uid));
-        const userData = docSnap.data();
-        currentUser = user.uid;
-        score = userData.score;
-        document.getElementById('auth').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        document.getElementById('user-name').textContent = userData.username;
-        scoreDisplay.textContent = score;
-        startCamera();
+        authDiv.style.display = 'none';
+        appDiv.style.display = 'block';
+        userNameSpan.textContent = user.email;
+        console.log(`Usuario inició sesión: ${user.email}`);
     } catch (error) {
-        alert('Error en el inicio de sesión: ' + error.message);
+        alert(`Error al iniciar sesión: ${error.message}`);
+        console.error(error);
     }
 });
 
-// Función para escanear QR
-document.getElementById('take-photo').addEventListener('click', () => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
-
-    if (qrCode) {
-        output.textContent = `Código QR detectado: ${qrCode.data}`;
-        if (qrCode.data === "1") {
-            score++;
-        } else if (qrCode.data === "0") {
-            score = 0;
-            alert('¡Lo lograste! Tienes un café gratis hoy.');
-        }
-        scoreDisplay.textContent = score;
-
-        // Guarda el marcador del usuario
-        setDoc(doc(db, "users", currentUser), { score: score }, { merge: true });
-    } else {
-        output.textContent = 'No se detectó ningún código QR.';
+// Cerrar sesión
+logoutBtn.addEventListener('click', async () => {
+    try {
+        await signOut(auth);
+        authDiv.style.display = 'block';
+        appDiv.style.display = 'none';
+        console.log('Usuario cerró sesión');
+    } catch (error) {
+        alert(`Error al cerrar sesión: ${error.message}`);
+        console.error(error);
     }
 });
