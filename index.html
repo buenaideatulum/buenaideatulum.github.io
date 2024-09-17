@@ -3,102 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión con Google</title>
+    <title>Tomar Foto y Leer QR</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        .container { max-width: 400px; margin: auto; }
-        button { width: 100%; padding: 10px; margin: 10px 0; }
-        .error { color: red; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f5;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        #video {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        #take-photo {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        #take-photo:hover {
+            background-color: #45a049;
+        }
+        #photo {
+            display: block;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            height: auto;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            background-color: #e0ffe0;
+            padding: 10px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
+    <h1>Tomar Foto y Leer Código QR</h1>
+    <video id="video" autoplay playsinline></video>
+    <button id="take-photo">Tomar Foto</button>
+    <canvas id="canvas"></canvas>
+    <img id="photo" src="" alt="Foto tomada">
+    <div id="output">Esperando código QR...</div>
 
-    <div class="container">
-        <h1>Iniciar Sesión con Google</h1>
+    <!-- Incluye la biblioteca jsQR -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
 
-        <!-- Botón para iniciar sesión con Google -->
-        <button id="google-signin-btn">Iniciar Sesión con Google</button>
-        <p class="error" id="login-error"></p>
-
-        <!-- Mensaje de bienvenida -->
-        <div id="welcome" style="display: none;">
-            <h2>Bienvenido, <span id="user-email"></span></h2>
-            <button id="logout-btn">Cerrar Sesión</button>
-        </div>
-    </div>
-
-    <!-- Firebase App (necesario para que funcione Firebase) -->
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js"></script>
-
-    <!-- Tu configuración de Firebase -->
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDJg1Kag-ttvBkWI-AO2Mvsj4GnSRbd74E",
-            authDomain: "authenticationqr-a08d4.firebaseapp.com",
-            projectId: "authenticationqr-a08d4",
-            storageBucket: "authenticationqr-a08d4.appspot.com",
-            messagingSenderId: "230256201537",
-            appId: "1:230256201537:web:7696b4351c13d4e95a9bc0",
-            measurementId: "G-LQD0PNH8PT"
-        };
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const photo = document.getElementById('photo');
+        const takePhotoButton = document.getElementById('take-photo');
+        const output = document.getElementById('output');
 
-        // Inicializa Firebase
-        firebase.initializeApp(firebaseConfig);
-
-        // Inicializa el servicio de autenticación
-        const auth = firebase.auth();
-
-        // Proveedor de Google
-        const provider = new firebase.auth.GoogleAuthProvider();
-
-        // Elementos del DOM
-        const googleSigninBtn = document.getElementById('google-signin-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const loginError = document.getElementById('login-error');
-        const userEmailDisplay = document.getElementById('user-email');
-        const welcomeDiv = document.getElementById('welcome');
-
-        // Iniciar sesión con Google
-        googleSigninBtn.addEventListener('click', () => {
-            auth.signInWithPopup(provider)
-                .then(result => {
-                    const user = result.user;
-                    welcomeDiv.style.display = 'block';
-                    userEmailDisplay.textContent = user.email;
-                    googleSigninBtn.style.display = 'none';
-                    loginError.textContent = '';
-                })
-                .catch(error => {
-                    loginError.textContent = error.message;
-                });
+        navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: { ideal: "environment" } } 
+        })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(error => {
+            console.error('Error al acceder a la cámara: ', error);
+            alert('No se puede acceder a la cámara, verifica los permisos.');
         });
 
-        // Cerrar sesión
-        logoutBtn.addEventListener('click', () => {
-            auth.signOut()
-                .then(() => {
-                    welcomeDiv.style.display = 'none';
-                    googleSigninBtn.style.display = 'block';
-                    alert('Sesión cerrada');
-                })
-                .catch(error => {
-                    console.error('Error al cerrar sesión:', error);
-                });
-        });
+        takePhotoButton.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            photo.src = canvas.toDataURL('image/png');
 
-        // Mantener al usuario autenticado
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                googleSigninBtn.style.display = 'none';
-                welcomeDiv.style.display = 'block';
-                userEmailDisplay.textContent = user.email;
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
+
+            if (qrCode) {
+                output.textContent = `Código QR detectado: ${qrCode.data}`;
             } else {
-                googleSigninBtn.style.display = 'block';
-                welcomeDiv.style.display = 'none';
+                output.textContent = 'No se detectó ningún código QR.';
             }
         });
     </script>
-
 </body>
 </html>
