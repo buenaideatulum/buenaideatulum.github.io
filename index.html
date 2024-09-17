@@ -26,7 +26,7 @@
 </head>
 <body>
     <h1>Tomar Foto</h1>
-    <video id="video" autoplay></video>
+    <video id="video" autoplay playsinline></video>
     <button id="take-photo">Tomar Foto</button>
     <canvas id="canvas"></canvas>
     <img id="photo" src="" alt="Foto tomada">
@@ -37,15 +37,17 @@
         const photo = document.getElementById('photo');
         const takePhotoButton = document.getElementById('take-photo');
 
-        // Accede a la cámara del usuario
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(error => {
-                console.error('Error al acceder a la cámara: ', error);
-                alert('No se puede acceder a la cámara, verifica los permisos.');
-            });
+        // Accede a la cámara trasera si está disponible
+        navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: { ideal: "environment" } } 
+        })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(error => {
+            console.error('Error al acceder a la cámara: ', error);
+            alert('No se puede acceder a la cámara, verifica los permisos.');
+        });
 
         takePhotoButton.addEventListener('click', () => {
             // Configura el canvas para el tamaño del video
