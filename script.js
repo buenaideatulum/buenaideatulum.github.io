@@ -12,10 +12,16 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         loggedIn = true;
         document.getElementById('loginDiv').style.display = 'none';
         document.getElementById('scannerDiv').style.display = 'block';
-        iniciarEscaneo();
+        document.getElementById('user').innerText = username;
     } else {
         alert("Nombre de usuario o contraseña incorrectos");
     }
+});
+
+document.getElementById('startScanBtn').addEventListener('click', function() {
+    iniciarEscaneo();
+    document.getElementById('startScanBtn').style.display = 'none';
+    document.getElementById('qr-reader').style.display = 'block';
 });
 
 function iniciarEscaneo() {
@@ -33,13 +39,13 @@ function iniciarEscaneo() {
 }
 
 function onScanSuccess(decodedText) {
-    const resultDiv = document.getElementById('result');
+    const pointsElement = document.getElementById('points');
     const mensaje = document.getElementById('mensaje');
     const resetBtn = document.getElementById('resetBtn');
     
     if (decodedText === "1") {
         puntos += 1;
-        resultDiv.innerText = `Puntos acumulados: ${puntos}`;
+        pointsElement.innerText = puntos;
         mensaje.innerText = "";
 
         if (puntos >= 5) {
@@ -50,20 +56,7 @@ function onScanSuccess(decodedText) {
         if (puntos >= 5) {
             mensaje.innerText = "Has canjeado tus puntos. ¡Disfruta tu gelato!";
             puntos = 0;
-            resultDiv.innerText = `Puntos acumulados: ${puntos}`;
+            pointsElement.innerText = puntos;
             resetBtn.style.display = 'none';
         } else {
-            mensaje.innerText = "No tienes suficientes puntos para canjear.";
-        }
-    }
-}
-
-function onScanFailure(error) {
-    console.warn(`Error de escaneo: ${error}`);
-}
-
-document.getElementById('resetBtn').addEventListener('click', function() {
-    puntos = 0;
-    document.getElementById('result').innerText = `Puntos acumulados: ${puntos}`;
-    document.getElementById('resetBtn').style.display = 'none';
-});
+            mensaje.innerText = "No tienes suficientes puntos
