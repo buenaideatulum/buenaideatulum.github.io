@@ -3,45 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión / Registrarse</title>
+    <title>Registro e Inicio de Sesión</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        #app { display: none; }
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .container { max-width: 400px; margin: auto; }
+        input { width: 100%; padding: 10px; margin: 10px 0; }
+        button { width: 100%; padding: 10px; margin: 10px 0; }
+        .error { color: red; }
     </style>
 </head>
 <body>
 
-    <div id="auth">
+    <div class="container">
         <h1>Iniciar Sesión / Registrarse</h1>
 
-        <!-- Formulario de registro -->
+        <!-- Registro -->
         <div id="register-form">
             <h2>Registro</h2>
-            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
-            <input type="password" id="register-password" placeholder="Contraseña" required><br>
+            <input type="email" id="register-email" placeholder="Correo electrónico" required>
+            <input type="password" id="register-password" placeholder="Contraseña" required>
             <button id="register-btn">Registrar</button>
+            <p class="error" id="register-error"></p>
         </div>
 
-        <!-- Formulario de inicio de sesión -->
+        <!-- Inicio de sesión -->
         <div id="login-form">
             <h2>Iniciar Sesión</h2>
-            <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
-            <input type="password" id="login-password" placeholder="Contraseña" required><br>
+            <input type="email" id="login-email" placeholder="Correo electrónico" required>
+            <input type="password" id="login-password" placeholder="Contraseña" required>
             <button id="login-btn">Iniciar Sesión</button>
+            <p class="error" id="login-error"></p>
+        </div>
+
+        <div id="welcome" style="display: none;">
+            <h2>Bienvenido, <span id="user-email"></span></h2>
+            <button id="logout-btn">Cerrar Sesión</button>
         </div>
     </div>
 
-    <!-- Aplicación principal (oculta al inicio) -->
-    <div id="app">
-        <h1>Bienvenido, <span id="user-name"></span></h1>
-        <button id="logout-btn">Cerrar Sesión</button>
-    </div>
-
-    <!-- Incluye los SDKs de Firebase -->
+    <!-- Firebase App (necesario) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+
+    <!-- Firebase Authentication -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js"></script>
 
-    <!-- Incluye el archivo JavaScript -->
-    <script src="script.js"></script>
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJg1Kag-ttvBkWI-AO2Mvsj4GnSRbd74E",
+            authDomain: "authenticationqr-a08d4.firebaseapp.com",
+            projectId: "authenticationqr-a08d4",
+            storageBucket: "authenticationqr-a08d4.appspot.com",
+            messagingSenderId: "230256201537",
+            appId: "1:230256201537:web:7696b4351c13d4e95a9bc0",
+            measurementId: "G-LQD0PNH8PT"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Elementos del DOM
+        const registerBtn = document.getElementById('register-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const registerError = document.getElementById('register-error');
+        const loginError = document.getElementById('login-error');
+        const userEmailDisplay = document.getElementById('user-email');
+        const registerForm = document.getElementById('register-form');
+        const loginForm = document.getElementById('login-form');
+        const welcomeDiv = document.getElementById('welcome');
+
+        // Registro de usuario
+        registerBtn.addEventListener('click', () => {
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    const user = userCredential.user;
+                    alert('Registro exitoso: ' + user.email);
+                    registerError.textContent = '';
+                })
+                .catch(error => {
+                    registerError.textContent = error.message;
+                });
+        });
+
+        // Inicio de sesión
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    const user = userCredential.user;
+                    loginForm.style.display = 'none';
+                    registerForm.style.display = 'none';
+                    welcomeDiv.style.display = 'block';
+                    userEmailDisplay.textContent = user.email;
+                    loginError.textContent = '';
+                })
+                .catch(error => {
+                    loginError.textContent = error.message;
+                });
+        });
+
+        // Cerrar sesión
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    welcomeDiv.style.display = 'none';
+                    loginForm.style.display = 'block';
+                    registerForm.style.display = 'block';
+                    alert('Sesión cerrada');
+                })
+                .catch(error => {
+                    console.error('Error al cerrar sesión:', error);
+                });
+        });
+
+        // Mantener al usuario autenticado
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'none';
+                welcomeDiv.style.display = 'block';
+                userEmailDisplay.textContent = user.email;
+            } else {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'block';
+                welcomeDiv.style.display = 'none';
+            }
+        });
+    </script>
+
 </body>
 </html>
