@@ -3,53 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro e Inicio de Sesión</title>
+    <title>Iniciar Sesión / Registrarse</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         #app { display: none; }
-        #video { width: 100%; height: auto; border: 1px solid black; margin-bottom: 20px; }
-        #output { margin-top: 20px; font-size: 1.2em; font-weight: bold; color: green; }
     </style>
 </head>
 <body>
-    <!-- Formulario de registro -->
+
     <div id="auth">
-        <h1>Registrarse / Iniciar Sesión</h1>
+        <h1>Iniciar Sesión / Registrarse</h1>
+
+        <!-- Formulario de registro -->
         <div id="register-form">
             <h2>Registro</h2>
-            <input type="text" id="register-username" placeholder="Nombre de usuario" required><br>
+            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
             <input type="password" id="register-password" placeholder="Contraseña" required><br>
             <button id="register-btn">Registrar</button>
         </div>
 
+        <!-- Formulario de inicio de sesión -->
         <div id="login-form">
             <h2>Iniciar Sesión</h2>
-            <input type="text" id="login-username" placeholder="Nombre de usuario" required><br>
+            <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
             <input type="password" id="login-password" placeholder="Contraseña" required><br>
             <button id="login-btn">Iniciar Sesión</button>
         </div>
     </div>
 
-    <!-- Aplicación principal -->
+    <!-- Aplicación principal (oculta al inicio) -->
     <div id="app">
         <h1>Bienvenido, <span id="user-name"></span></h1>
-        <p>Marcador: <span id="score">0</span></p>
-        <video id="video" autoplay playsinline></video>
-        <button id="take-photo">Escanear Código QR</button>
-        <canvas id="canvas" style="display: none;"></canvas>
-        <img id="photo" src="" alt="Foto tomada" style="display: none;">
-        <div id="output">Esperando código QR...</div>
+        <button id="logout-btn">Cerrar Sesión</button>
     </div>
 
-    <!-- Incluye la biblioteca jsQR -->
-    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
-
-    <!-- Incluye Firebase SDK -->
+    <!-- Incluye los SDKs de Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js"></script>
 
-    <!-- Tu script JS -->
+    <!-- Incluye el archivo JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
