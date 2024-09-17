@@ -5,43 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tomar Foto y Leer QR</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f5;
-            color: #333;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            color: #4CAF50;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
         #video {
             width: 100%;
-            max-width: 400px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            height: auto;
+            border: 1px solid black;
+            display: block;
             margin-bottom: 20px;
         }
-        #take-photo {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        #take-photo:hover {
-            background-color: #45a049;
+        #canvas {
+            display: none; /* Oculta el canvas */
         }
         #photo {
             display: block;
-            margin: 20px auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            border: 1px solid black;
             max-width: 100%;
             height: auto;
         }
@@ -49,12 +26,7 @@
             margin-top: 20px;
             font-size: 1.2em;
             font-weight: bold;
-            color: #333;
-            background-color: #e0ffe0;
-            padding: 10px;
-            border: 1px solid #4CAF50;
-            border-radius: 5px;
-            display: inline-block;
+            color: green;
         }
     </style>
 </head>
@@ -76,6 +48,7 @@
         const takePhotoButton = document.getElementById('take-photo');
         const output = document.getElementById('output');
 
+        // Accede a la cámara trasera si está disponible
         navigator.mediaDevices.getUserMedia({ 
             video: { facingMode: { ideal: "environment" } } 
         })
@@ -88,18 +61,28 @@
         });
 
         takePhotoButton.addEventListener('click', () => {
+            // Configura el canvas para el tamaño del video
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
+
+            // Dibuja la imagen del video en el canvas
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Muestra la foto tomada
             photo.src = canvas.toDataURL('image/png');
 
+            // Lee la imagen en formato de píxeles
             const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            
+            // Decodifica el código QR usando jsQR
             const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
 
             if (qrCode) {
+                // Si se detecta un código QR, muestra el mensaje
                 output.textContent = `Código QR detectado: ${qrCode.data}`;
             } else {
+                // Si no se detecta ningún código QR
                 output.textContent = 'No se detectó ningún código QR.';
             }
         });
