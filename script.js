@@ -2,6 +2,8 @@
 let puntos = 0;
 let html5QrCode = new Html5Qrcode("qr-reader");
 
+console.log("JavaScript cargado correctamente.");  // Mensaje de depuración para verificar que el archivo JS se ha cargado.
+
 function onScanSuccess(decodedText) {
     console.log(`Código escaneado: ${decodedText}`);
     
@@ -34,10 +36,23 @@ function onScanFailure(error) {
     console.warn(`Error de escaneo: ${error}`);
 }
 
-// Iniciar escaneo automáticamente al cargar la página
-html5QrCode.start(
-    { facingMode: { exact: "environment" } }, // Cámara trasera
-    { fps: 10, qrbox: 250 }, 
-    onScanSuccess, 
-    onScanFailure
-);
+// Verificar si se puede acceder a la cámara
+async function iniciarEscaneo() {
+    try {
+        console.log("Intentando iniciar el escaneo...");
+        
+        await html5QrCode.start(
+            { facingMode: { exact: "environment" } },  // Cámara trasera
+            { fps: 10, qrbox: 250 }, 
+            onScanSuccess, 
+            onScanFailure
+        );
+
+        console.log("Escaneo iniciado correctamente.");
+    } catch (error) {
+        console.error("Error al iniciar el escaneo: ", error);
+        alert(`No se puede acceder a la cámara. Verifica los permisos o usa HTTPS.\n\nError: ${error.message}`);
+    }
+}
+
+iniciarEscaneo();  // Iniciar el escaneo al cargar la página.
