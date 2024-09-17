@@ -3,58 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abrir Cámara</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        #cameraBtn {
-            padding: 20px 40px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        #cameraBtn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Escáner de QR para puntos</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <button id="cameraBtn">Presiona</button>
+    <!-- Inicio de sesión -->
+    <div id="loginDiv">
+        <h2>Inicio de sesión</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Nombre" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button type="submit">Iniciar sesión</button>
+        </form>
+    </div>
 
-    <script>
-        document.getElementById('cameraBtn').addEventListener('click', () => {
-            // Intentar acceder a la cámara del dispositivo
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    // Abrir la cámara
-                    const videoElement = document.createElement('video');
-                    videoElement.srcObject = stream;
-                    videoElement.play();
+    <!-- Escáner de QR -->
+    <div id="scannerDiv" style="display:none;">
+        <h2>Escanea tu código QR</h2>
+        <div id="qr-reader" style="width: 300px;"></div>
+        <div id="result">Puntos acumulados: 0</div>
+        <p id="mensaje"></p>
+        <button id="resetBtn" style="display:none;">Canjear y Reiniciar Puntos</button>
+    </div>
 
-                    // Añadir el video al body para visualizar la cámara
-                    document.body.appendChild(videoElement);
-                    videoElement.style.width = '100%';
-                    videoElement.style.height = '100%';
-                    videoElement.style.position = 'absolute';
-                    videoElement.style.top = '0';
-                    videoElement.style.left = '0';
-                })
-                .catch(error => {
-                    alert('No se pudo acceder a la cámara: ' + error);
-                });
-        });
-    </script>
-
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
