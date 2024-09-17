@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro e Inicio de Sesión</title>
+    <title>Inicio de Sesión con Google</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
         .container { max-width: 400px; margin: auto; }
-        input { width: 100%; padding: 10px; margin: 10px 0; }
         button { width: 100%; padding: 10px; margin: 10px 0; }
         .error { color: red; }
     </style>
@@ -15,26 +14,13 @@
 <body>
 
     <div class="container">
-        <h1>Iniciar Sesión / Registrarse</h1>
+        <h1>Iniciar Sesión con Google</h1>
 
-        <!-- Registro -->
-        <div id="register-form">
-            <h2>Registro</h2>
-            <input type="email" id="register-email" placeholder="Correo electrónico" required>
-            <input type="password" id="register-password" placeholder="Contraseña" required>
-            <button id="register-btn">Registrar</button>
-            <p class="error" id="register-error"></p>
-        </div>
+        <!-- Botón para iniciar sesión con Google -->
+        <button id="google-signin-btn">Iniciar Sesión con Google</button>
+        <p class="error" id="login-error"></p>
 
-        <!-- Inicio de sesión -->
-        <div id="login-form">
-            <h2>Iniciar Sesión</h2>
-            <input type="email" id="login-email" placeholder="Correo electrónico" required>
-            <input type="password" id="login-password" placeholder="Contraseña" required>
-            <button id="login-btn">Iniciar Sesión</button>
-            <p class="error" id="login-error"></p>
-        </div>
-
+        <!-- Mensaje de bienvenida -->
         <div id="welcome" style="display: none;">
             <h2>Bienvenido, <span id="user-email"></span></h2>
             <button id="logout-btn">Cerrar Sesión</button>
@@ -63,45 +49,24 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
+        // Proveedor de Google
+        const provider = new firebase.auth.GoogleAuthProvider();
+
         // Elementos del DOM
-        const registerBtn = document.getElementById('register-btn');
-        const loginBtn = document.getElementById('login-btn');
+        const googleSigninBtn = document.getElementById('google-signin-btn');
         const logoutBtn = document.getElementById('logout-btn');
-        const registerError = document.getElementById('register-error');
         const loginError = document.getElementById('login-error');
         const userEmailDisplay = document.getElementById('user-email');
-        const registerForm = document.getElementById('register-form');
-        const loginForm = document.getElementById('login-form');
         const welcomeDiv = document.getElementById('welcome');
 
-        // Registro de usuario
-        registerBtn.addEventListener('click', () => {
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    const user = userCredential.user;
-                    alert('Registro exitoso: ' + user.email);
-                    registerError.textContent = '';
-                })
-                .catch(error => {
-                    registerError.textContent = error.message;
-                });
-        });
-
-        // Inicio de sesión
-        loginBtn.addEventListener('click', () => {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    const user = userCredential.user;
-                    loginForm.style.display = 'none';
-                    registerForm.style.display = 'none';
+        // Iniciar sesión con Google
+        googleSigninBtn.addEventListener('click', () => {
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    const user = result.user;
                     welcomeDiv.style.display = 'block';
                     userEmailDisplay.textContent = user.email;
+                    googleSigninBtn.style.display = 'none';
                     loginError.textContent = '';
                 })
                 .catch(error => {
@@ -114,8 +79,7 @@
             auth.signOut()
                 .then(() => {
                     welcomeDiv.style.display = 'none';
-                    loginForm.style.display = 'block';
-                    registerForm.style.display = 'block';
+                    googleSigninBtn.style.display = 'block';
                     alert('Sesión cerrada');
                 })
                 .catch(error => {
@@ -126,13 +90,11 @@
         // Mantener al usuario autenticado
         auth.onAuthStateChanged(user => {
             if (user) {
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'none';
+                googleSigninBtn.style.display = 'none';
                 welcomeDiv.style.display = 'block';
                 userEmailDisplay.textContent = user.email;
             } else {
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'block';
+                googleSigninBtn.style.display = 'block';
                 welcomeDiv.style.display = 'none';
             }
         });
