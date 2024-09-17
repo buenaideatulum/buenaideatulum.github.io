@@ -9,6 +9,8 @@
             width: 100%;
             height: auto;
             border: 1px solid black;
+            display: block;
+            margin-bottom: 20px;
         }
         #canvas {
             display: none; /* Oculta el canvas */
@@ -30,21 +32,22 @@
     <img id="photo" src="" alt="Foto tomada">
 
     <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const photo = document.getElementById('photo');
+        const takePhotoButton = document.getElementById('take-photo');
+
         // Accede a la cámara del usuario
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
-                // Muestra el video en el elemento de video
-                document.getElementById('video').srcObject = stream;
+                video.srcObject = stream;
             })
             .catch(error => {
                 console.error('Error al acceder a la cámara: ', error);
+                alert('No se puede acceder a la cámara, verifica los permisos.');
             });
 
-        document.getElementById('take-photo').addEventListener('click', () => {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const photo = document.getElementById('photo');
-
+        takePhotoButton.addEventListener('click', () => {
             // Configura el canvas para el tamaño del video
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
