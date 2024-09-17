@@ -45,26 +45,7 @@
     <!-- Incluye la biblioteca jsQR -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js"></script>
-
     <script>
-        // Tu configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDJg1Kag-ttvBkWI-AO2Mvsj4GnSRbd74E",
-            authDomain: "authenticationqr-a08d4.firebaseapp.com",
-            projectId: "authenticationqr-a08d4",
-            storageBucket: "authenticationqr-a08d4.appspot.com",
-            messagingSenderId: "230256201537",
-            appId: "1:230256201537:web:7696b4351c13d4e95a9bc0",
-            measurementId: "G-LQD0PNH8PT"
-        };
-
-        // Inicializar Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const photo = document.getElementById('photo');
@@ -87,6 +68,7 @@
 
         // Registro
         document.getElementById('register-btn').addEventListener('click', () => {
+            console.log('Botón de registro presionado');
             const username = document.getElementById('register-username').value;
             const password = document.getElementById('register-password').value;
 
@@ -94,13 +76,16 @@
                 // Guarda el usuario en localStorage
                 localStorage.setItem(username, JSON.stringify({ password: password, score: 0 }));
                 alert('Registro exitoso. Ahora puedes iniciar sesión.');
+                console.log(`Usuario registrado: ${username}`);
             } else {
                 alert('Por favor, completa los campos.');
+                console.log('Faltan datos en el formulario de registro');
             }
         });
 
         // Inicio de sesión
         document.getElementById('login-btn').addEventListener('click', () => {
+            console.log('Botón de inicio de sesión presionado');
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
 
@@ -115,13 +100,16 @@
                 document.getElementById('user-name').textContent = username;
                 scoreDisplay.textContent = score;
                 startCamera();
+                console.log(`Usuario ${username} inició sesión con éxito`);
             } else {
                 alert('Usuario o contraseña incorrectos.');
+                console.log('Datos incorrectos en el inicio de sesión');
             }
         });
 
         // Función para escanear QR
         document.getElementById('take-photo').addEventListener('click', () => {
+            console.log('Escaneo de código QR iniciado');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const context = canvas.getContext('2d');
@@ -131,6 +119,7 @@
 
             if (qrCode) {
                 output.textContent = `Código QR detectado: ${qrCode.data}`;
+                console.log(`Código QR detectado: ${qrCode.data}`);
                 if (qrCode.data === "1") {
                     score++;
                 } else if (qrCode.data === "0") {
@@ -143,8 +132,10 @@
                 const userData = JSON.parse(localStorage.getItem(currentUser));
                 userData.score = score;
                 localStorage.setItem(currentUser, JSON.stringify(userData));
+                console.log(`Puntuación actualizada para el usuario ${currentUser}: ${score}`);
             } else {
                 output.textContent = 'No se detectó ningún código QR.';
+                console.log('No se detectó ningún código QR');
             }
         });
     </script>
