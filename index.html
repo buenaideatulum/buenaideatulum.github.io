@@ -12,9 +12,6 @@
     </style>
 </head>
 <body>
-
-    <div id="debug-info">Cargando...</div>
-
     <!-- Formulario de registro -->
     <div id="auth">
         <h1>Registrarse / Iniciar Sesión</h1>
@@ -46,11 +43,13 @@
 
     <!-- Incluye la biblioteca jsQR -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
-    <script src="script.js"></script>
 
-    <script>
-        // Mensaje de depuración
-        document.getElementById('debug-info').textContent = "script.js ha sido cargado.";
-    </script>
+    <!-- Incluye Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js"></script>
+
+    <!-- Tu script JS -->
+    <script src="script.js"></script>
 </body>
 </html>
