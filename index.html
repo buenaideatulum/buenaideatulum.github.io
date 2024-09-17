@@ -27,14 +27,12 @@
         </div>
     </div>
 
-    <!-- Firebase App (necesario) -->
+    <!-- Firebase App (necesario para que funcione Firebase) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-
-    <!-- Firebase Authentication -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js"></script>
 
+    <!-- Tu configuración de Firebase -->
     <script>
-        // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDJg1Kag-ttvBkWI-AO2Mvsj4GnSRbd74E",
             authDomain: "authenticationqr-a08d4.firebaseapp.com",
@@ -45,8 +43,10 @@
             measurementId: "G-LQD0PNH8PT"
         };
 
-        // Inicializar Firebase
+        // Inicializa Firebase
         firebase.initializeApp(firebaseConfig);
+
+        // Inicializa el servicio de autenticación
         const auth = firebase.auth();
 
         // Proveedor de Google
