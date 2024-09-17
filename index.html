@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tomar Foto</title>
+    <title>Tomar Foto y Leer QR</title>
     <style>
         #video {
             width: 100%;
@@ -22,20 +22,31 @@
             max-width: 100%;
             height: auto;
         }
+        #output {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: green;
+        }
     </style>
 </head>
 <body>
-    <h1>Tomar Foto</h1>
+    <h1>Tomar Foto y Leer Código QR</h1>
     <video id="video" autoplay playsinline></video>
     <button id="take-photo">Tomar Foto</button>
     <canvas id="canvas"></canvas>
     <img id="photo" src="" alt="Foto tomada">
+    <div id="output">Esperando código QR...</div>
+
+    <!-- Incluye la biblioteca jsQR -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
 
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const photo = document.getElementById('photo');
         const takePhotoButton = document.getElementById('take-photo');
+        const output = document.getElementById('output');
 
         // Accede a la cámara trasera si está disponible
         navigator.mediaDevices.getUserMedia({ 
@@ -58,8 +69,22 @@
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Obtén la imagen del canvas y actualiza el elemento de imagen
+            // Muestra la foto tomada
             photo.src = canvas.toDataURL('image/png');
+
+            // Lee la imagen en formato de píxeles
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            
+            // Decodifica el código QR usando jsQR
+            const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
+
+            if (qrCode) {
+                // Si se detecta un código QR, muestra el mensaje
+                output.textContent = `Código QR detectado: ${qrCode.data}`;
+            } else {
+                // Si no se detecta ningún código QR
+                output.textContent = 'No se detectó ningún código QR.';
+            }
         });
     </script>
 </body>
