@@ -3,7 +3,7 @@ let loggedIn = false;
 let html5QrCode;
 
 document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();  // Prevenir recarga
+    event.preventDefault();  // Prevenir recarga de la página
 
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -20,12 +20,15 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
 document.getElementById('startScanBtn').addEventListener('click', function() {
     iniciarEscaneo();
-    document.getElementById('startScanBtn').style.display = 'none';
-    document.getElementById('qr-reader').style.display = 'block';
 });
 
 function iniciarEscaneo() {
-    html5QrCode = new Html5Qrcode("qr-reader");
+    if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("qr-reader");
+    }
+
+    document.getElementById('startScanBtn').style.display = 'none';  // Oculta el botón después de hacer clic
+    document.getElementById('qr-reader').style.display = 'block';  // Muestra el lector de QR
 
     html5QrCode.start(
         { facingMode: "environment" },  // Cámara trasera
@@ -59,4 +62,17 @@ function onScanSuccess(decodedText) {
             pointsElement.innerText = puntos;
             resetBtn.style.display = 'none';
         } else {
-            mensaje.innerText = "No tienes suficientes puntos
+            mensaje.innerText = "No tienes suficientes puntos para canjear.";
+        }
+    }
+}
+
+function onScanFailure(error) {
+    console.warn(`Error de escaneo: ${error}`);
+}
+
+document.getElementById('resetBtn').addEventListener('click', function() {
+    puntos = 0;
+    document.getElementById('points').innerText = puntos;
+    document.getElementById('resetBtn').style.display = 'none';
+});
