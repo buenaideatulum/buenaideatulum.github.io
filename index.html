@@ -20,9 +20,10 @@
 
     <!-- Escáner de QR -->
     <div id="scannerDiv" style="display:none;">
-        <h2>Escanea tu código QR</h2>
-        <div id="qr-reader" style="width: 300px;"></div>
-        <div id="result">Puntos acumulados: 0</div>
+        <h2>Bienvenido, <span id="user"></span></h2>
+        <p>Puntos acumulados: <span id="points">0</span></p>
+        <button id="startScanBtn">Empezar escaneo</button>
+        <div id="qr-reader" style="width: 300px; display:none;"></div>
         <p id="mensaje"></p>
         <button id="resetBtn" style="display:none;">Canjear y Reiniciar Puntos</button>
     </div>
