@@ -3,32 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escáner de QR para puntos</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Escanear QR</title>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <style>
+        #reader {
+            width: 100%;
+            height: 100%;
+        }
+        #scanned-result {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
+    <h1>Escanear QR</h1>
+    <button id="start-scan">Escanea</button>
+    <div id="reader" style="display: none;"></div>
+    <div id="scanned-result"></div>
 
-    <!-- Inicio de sesión -->
-    <div id="loginDiv">
-        <h2>Inicio de sesión</h2>
-        <form id="loginForm">
-            <input type="text" id="username" placeholder="Nombre" required>
-            <input type="password" id="password" placeholder="Contraseña" required>
-            <button type="submit">Iniciar sesión</button>
-        </form>
-    </div>
+    <script>
+        const startScanButton = document.getElementById('start-scan');
+        const readerElement = document.getElementById('reader');
+        const scannedResultElement = document.getElementById('scanned-result');
 
-    <!-- Escáner de QR -->
-    <div id="scannerDiv" style="display:none;">
-        <h2>Bienvenido, <span id="user"></span></h2>
-        <p>Puntos acumulados: <span id="points">0</span></p>
-        <button id="startScanBtn">Empezar escaneo</button>
-        <div id="qr-reader" style="width: 300px; display:none;"></div>
-        <p id="mensaje"></p>
-        <button id="resetBtn" style="display:none;">Canjear y Reiniciar Puntos</button>
-    </div>
+        let html5QrCode;
 
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-    <script src="script.js"></script>
+        startScanButton.addEventListener('click', () => {
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader");
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 }
+                    },
+                    (decodedText, decodedResult) => {
+                        scannedResultElement.innerText = `Código QR detectado: ${decodedText}`;
+                        html5QrCode.stop();
+                    },
+                    (errorMessage) => {
+                        // Puedes manejar el error aquí si es necesario
+                    }
+                ).catch((err) => {
+                    console.error("Error al iniciar el escáner: ", err);
+                });
+                readerElement.style.display = 'block';
+            } else {
+                html5QrCode.start({
+                    facingMode: "environment"
+                }, {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                });
+                readerElement.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
