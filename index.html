@@ -31,23 +31,39 @@
         startScanButton.addEventListener('click', () => {
             if (!html5QrCode) {
                 html5QrCode = new Html5Qrcode("reader");
-                html5QrCode.start(
-                    { facingMode: "environment" },
-                    {
-                        fps: 10,
-                        qrbox: { width: 250, height: 250 }
-                    },
-                    (decodedText, decodedResult) => {
-                        scannedResultElement.innerText = `Código QR detectado: ${decodedText}`;
-                        html5QrCode.stop();
-                    },
-                    (errorMessage) => {
-                        // Puedes manejar el error aquí si es necesario
+
+                // Este método obtiene los dispositivos de video disponibles
+                Html5Qrcode.getCameras().then(devices => {
+                    if (devices && devices.length) {
+                        // Encuentra la cámara trasera
+                        const rearCamera = devices.find(device => device.facingMode === "environment");
+                        if (rearCamera) {
+                            html5QrCode.start(
+                                { facingMode: "environment", deviceId: { exact: rearCamera.id } },
+                                {
+                                    fps: 10,
+                                    qrbox: { width: 250, height: 250 }
+                                },
+                                (decodedText, decodedResult) => {
+                                    scannedResultElement.innerText = `Código QR detectado: ${decodedText}`;
+                                    html5QrCode.stop();
+                                },
+                                (errorMessage) => {
+                                    // Puedes manejar el error aquí si es necesario
+                                }
+                            ).catch((err) => {
+                                console.error("Error al iniciar el escáner: ", err);
+                            });
+                            readerElement.style.display = 'block';
+                        } else {
+                            scannedResultElement.innerText = "No se encontró la cámara trasera.";
+                        }
+                    } else {
+                        scannedResultElement.innerText = "No se encontraron cámaras.";
                     }
-                ).catch((err) => {
-                    console.error("Error al iniciar el escáner: ", err);
+                }).catch(err => {
+                    console.error("Error al obtener cámaras: ", err);
                 });
-                readerElement.style.display = 'block';
             } else {
                 html5QrCode.start({
                     facingMode: "environment"
