@@ -3,32 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro e Inicio de Sesión</title>
+    <title>Escaneo de Código QR</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         #app { display: none; }
         #video { width: 100%; height: auto; border: 1px solid black; margin-bottom: 20px; }
         #output { margin-top: 20px; font-size: 1.2em; font-weight: bold; color: green; }
     </style>
+    <script type="module" src="script.js"></script>
 </head>
 <body>
-
-    <!-- Formulario de registro -->
+    <!-- Pantalla de inicio de sesión -->
     <div id="auth">
-        <h1>Registrarse / Iniciar Sesión</h1>
-        <div id="register-form">
-            <h2>Registro</h2>
-            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
-            <input type="password" id="register-password" placeholder="Contraseña" required><br>
-            <button id="register-btn">Registrar</button>
-        </div>
-
-        <div id="login-form">
-            <h2>Iniciar Sesión</h2>
-            <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
-            <input type="password" id="login-password" placeholder="Contraseña" required><br>
-            <button id="login-btn">Iniciar Sesión</button>
-        </div>
+        <h1>Iniciar Sesión</h1>
+        <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
+        <input type="password" id="login-password" placeholder="Contraseña" required><br>
+        <button id="login-btn">Iniciar Sesión</button>
     </div>
 
     <!-- Aplicación principal -->
@@ -44,8 +34,5 @@
 
     <!-- Incluye la biblioteca jsQR -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
-
-    <!-- Incluye Firebase SDK -->
-    <script type="module" src="script.js"></script>
 </body>
 </html>
