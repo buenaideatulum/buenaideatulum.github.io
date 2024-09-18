@@ -1,30 +1,50 @@
-document.getElementById('take-photo').addEventListener('click', () => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
+// Registro de usuario
+document.getElementById('register-btn').addEventListener('click', () => {
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
 
-    if (qrCode) {
-        output.textContent = `Código QR detectado: ${qrCode.data}`;
-        if (qrCode.data === "1" && score < 5) {
-            score++;
-        }
-        if (score === 5) {
-            alert('Felicidades, tienes un café gratis');
-            // Mostrar un mensaje de felicitaciones en lugar de la alerta
-            const congratsMessage = document.createElement('div');
-            congratsMessage.className = 'congrats-message glass';
-            congratsMessage.textContent = 'Felicidades, tienes un café gratis';
-            document.body.appendChild(congratsMessage);
-        }
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Registro exitoso
+        const user = userCredential.user;
+        alert('Registro exitoso. Ahora puedes iniciar sesión.');
+        console.log('Usuario registrado:', user.email);
+    })
+    .catch((error) => {
+        alert('Error al registrarse: ' + error.message);
+        console.error('Error al registrarse:', error);
+    });
+});
+
+// Inicio de sesión
+document.getElementById('login-btn').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    // Comprueba si los campos no están vacíos
+    if (email === '' || password === '') {
+        alert('Por favor, llena todos los campos.');
+        return;
+    }
+
+    signInWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+        // Inicio de sesión exitoso
+        const user = userCredential.user;
+        document.getElementById('auth').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('user-name').textContent = user.email;
+
+        // Mensaje de depuración
+        console.log('Inicio de sesión exitoso:', user.email);
+
+        score = await getUserScore(user.uid);
         scoreDisplay.textContent = score;
 
-        // Guarda el marcador actualizado en Firestore
-        const userId = auth.currentUser.uid;
-        saveScore(userId, score);
-    } else {
-        output.textContent = 'No se detectó ningún código QR.';
-    }
+        startCamera();
+    })
+    .catch((error) => {
+        alert('Error al iniciar sesión: ' + error.message);
+        console.error('Error al iniciar sesión:', error);
+    });
 });
