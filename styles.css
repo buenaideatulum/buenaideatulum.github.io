@@ -1,24 +1,88 @@
-/* Tamaño reducido del video de la cámara */
+/* General Glassmorphism styles */
+.glass {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 20px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de la pantalla de autenticación */
+#auth {
+    display: flex;
+    flex-direction: column; /* Asegura que los formularios estén en columna */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
+}
+
+#login-form, #register-form {
+    width: 300px;
+    padding: 20px;
+    text-align: center;
+    margin: 20px;
+}
+
+#login-form.glass, #register-form.glass {
+    padding: 40px;
+}
+
+/* Asegurar que los formularios estén en disposición vertical */
+#login-form, #register-form {
+    display: block;
+    margin: 10px 0;
+}
+
+/* Pantalla de escaneo */
+#app {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+/* Estilos adicionales para botones y campos */
+input[type="email"], input[type="password"], button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
+}
+
+button {
+    background-color: #5f72ff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #4154ff;
+}
+
+/* Tamaño ajustado para la cámara */
 video {
-    width: 80%; /* Ajuste recomendado para dispositivos móviles */
+    width: 80%; /* Ajusta este valor según lo que se vea mejor en tu celular */
     height: auto;
     margin-top: 20px;
     border-radius: 16px;
     backdrop-filter: blur(10px);
 }
 
-/* Estilo para el mensaje de felicitación */
-.congrats-message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 16px;
-    padding: 20px;
-    font-size: 1.5em;
-    color: #ff5e78;
-    text-align: center;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+canvas {
+    display: none;
 }
+
+#output {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: green;
+}
+
+/* Estilo del marcador */
+#score {
+   
