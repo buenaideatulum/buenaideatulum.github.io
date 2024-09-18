@@ -12,6 +12,7 @@
 /* Estilo de la pantalla de autenticación */
 #auth {
     display: flex;
+    flex-direction: column; /* Cambia la dirección del flex a columna */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -22,7 +23,7 @@
     width: 300px;
     padding: 20px;
     text-align: center;
-    margin: 20px;
+    margin: 10px; /* Reduce el margen para que se ajuste mejor en la pantalla */
 }
 
 #login-form.glass, #register-form.glass {
