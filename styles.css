@@ -1,51 +1,29 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 100%);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Para evitar barras de desplazamiento innecesarias */
 }
 
-#app, #auth {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 90%;
-    max-width: 500px;
-    color: white;
+#auth {
+    display: block;
 }
 
-input, button {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    margin: 10px 0;
-    color: white;
+#app {
+    display: none;
+}
+
+video {
     width: 100%;
-}
-
-button {
-    cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.3);
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: rgba(255, 255, 255, 0.5);
-}
-
-#video {
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    height: auto;
+    border: 1px solid black;
+    margin-bottom: 20px;
 }
 
 #output {
-    background: rgba(0, 255, 0, 0.2);
-    padding: 10px;
-    border-radius: 10px;
-    margin-top: 10px;
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: green;
 }
