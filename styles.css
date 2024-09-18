@@ -12,7 +12,7 @@
 /* Estilo de la pantalla de autenticación */
 #auth {
     display: flex;
-    flex-direction: column; /* Asegura que los formularios estén en columna */
+    flex-direction: column;  /* Vertical layout */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -28,12 +28,6 @@
 
 #login-form.glass, #register-form.glass {
     padding: 40px;
-}
-
-/* Asegurar que los formularios estén en disposición vertical */
-#login-form, #register-form {
-    display: block;
-    margin: 10px 0;
 }
 
 /* Pantalla de escaneo */
@@ -63,9 +57,8 @@ button:hover {
     background-color: #4154ff;
 }
 
-/* Tamaño ajustado para la cámara */
 video {
-    width: 80%; /* Ajusta este valor según lo que se vea mejor en tu celular */
+    width: 100%;
     height: auto;
     margin-top: 20px;
     border-radius: 16px;
@@ -83,6 +76,8 @@ canvas {
     color: green;
 }
 
-/* Estilo del marcador */
 #score {
-   
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ff5e78;
+}
