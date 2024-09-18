@@ -75,4 +75,61 @@ document.getElementById('register-btn').addEventListener('click', () => {
         console.log('Usuario registrado:', user.email);
     })
     .catch((error) => {
+        alert('Error al registrarse: ' + error.message);
+        console.error('Error al registrarse:', error);
+    });
+});
+
+// Inicio de sesión
+document.getElementById('login-btn').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+        // Inicio de sesión exitoso
+        const user = userCredential.user;
+        document.getElementById('auth').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('user-name').textContent = user.email;
         
+        // Mensaje de depuración
+        console.log('Pantalla de Autenticación oculta y Pantalla de Escaneo mostrada.');
+
+        score = await getUserScore(user.uid);
+        scoreDisplay.textContent = score;
+
+        startCamera();
+    })
+    .catch((error) => {
+        alert('Error al iniciar sesión: ' + error.message);
+        console.error('Error al iniciar sesión:', error);
+    });
+});
+
+// Función para escanear QR
+document.getElementById('take-photo').addEventListener('click', () => {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
+
+    if (qrCode) {
+        output.textContent = `Código QR detectado: ${qrCode.data}`;
+        if (qrCode.data === "1") {
+            score++;
+        } else if (qrCode.data === "0") {
+            score = 0;
+            alert('¡Lo lograste! Tienes un café gratis hoy.');
+        }
+        scoreDisplay.textContent = score;
+
+        // Guarda el marcador actualizado en Firestore
+        const userId = auth.currentUser.uid;
+        saveScore(userId, score);
+    } else {
+        output.textContent = 'No se detectó ningún código QR.';
+    }
+});
