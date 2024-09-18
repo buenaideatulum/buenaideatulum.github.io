@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
 
 // Configuración de Firebase
@@ -16,6 +17,7 @@ const firebaseConfig = {
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 const analytics = getAnalytics(app);
 
 const video = document.getElementById('video');
@@ -34,6 +36,30 @@ function startCamera() {
         console.error('Error al acceder a la cámara: ', error);
         alert('No se puede acceder a la cámara, verifica los permisos.');
     });
+}
+
+// Función para guardar el marcador del usuario en Firestore
+async function saveScore(userId, newScore) {
+    const userDoc = doc(db, "users", userId);
+    try {
+        // Actualiza el marcador del usuario
+        await updateDoc(userDoc, { score: newScore });
+    } catch (error) {
+        // Si el usuario no existe, lo crea con el marcador inicial
+        await setDoc(userDoc, { score: newScore });
+    }
+}
+
+// Función para obtener el marcador del usuario desde Firestore
+async function getUserScore(userId) {
+    const userDoc = doc(db, "users", userId);
+    const docSnap = await getDoc(userDoc);
+
+    if (docSnap.exists()) {
+        return docSnap.data().score;
+    } else {
+        return 0; // Si no tiene marcador, se inicia en 0
+    }
 }
 
 // Registro de usuario
@@ -55,17 +81,22 @@ document.getElementById('register-btn').addEventListener('click', () => {
 });
 
 // Inicio de sesión
-document.getElementById('login-btn').addEventListener('click', () => {
+document.getElementById('login-btn').addEventListener('click', async () => {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
         // Inicio de sesión exitoso
         const user = userCredential.user;
         document.getElementById('auth').style.display = 'none';
         document.getElementById('app').style.display = 'block';
         document.getElementById('user-name').textContent = user.email;
+        
+        // Obtiene el marcador del usuario desde Firestore
+        score = await getUserScore(user.uid);
+        scoreDisplay.textContent = score;
+
         startCamera();
     })
     .catch((error) => {
@@ -92,6 +123,10 @@ document.getElementById('take-photo').addEventListener('click', () => {
             alert('¡Lo lograste! Tienes un café gratis hoy.');
         }
         scoreDisplay.textContent = score;
+
+        // Guarda el marcador actualizado en Firestore
+        const userId = auth.currentUser.uid;
+        saveScore(userId, score);
     } else {
         output.textContent = 'No se detectó ningún código QR.';
     }
