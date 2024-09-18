@@ -4,19 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escaneo de Código QR</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Conexión del CSS externo -->
+    <link rel="stylesheet" href="styles.css">
     <script type="module" src="script.js"></script>
 </head>
 <body>
-    <!-- Pantalla de Autenticación -->
+    <!-- Pantalla de autenticación (registro e inicio de sesión) -->
     <div id="auth">
         <h1>Autenticación</h1>
+
+        <!-- Formulario de registro -->
         <div id="register-form">
             <h2>Registro</h2>
             <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
             <input type="password" id="register-password" placeholder="Contraseña" required><br>
             <button id="register-btn">Registrar</button>
         </div>
+
+        <!-- Formulario de inicio de sesión -->
         <div id="login-form">
             <h2>Iniciar Sesión</h2>
             <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
@@ -25,7 +29,7 @@
         </div>
     </div>
 
-    <!-- Pantalla de Escaneo -->
+    <!-- Aplicación principal -->
     <div id="app">
         <h1>Bienvenido, <span id="user-name"></span></h1>
         <p>Marcador: <span id="score">0</span></p>
@@ -36,6 +40,7 @@
         <div id="output">Esperando código QR...</div>
     </div>
 
+    <!-- Incluye la biblioteca jsQR -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
 </body>
 </html>
