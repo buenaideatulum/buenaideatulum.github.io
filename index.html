@@ -3,89 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tomar Foto y Leer QR</title>
+    <title>Registro e Inicio de Sesión</title>
     <style>
-        #video {
-            width: 100%;
-            height: auto;
-            border: 1px solid black;
-            display: block;
-            margin-bottom: 20px;
-        }
-        #canvas {
-            display: none; /* Oculta el canvas */
-        }
-        #photo {
-            display: block;
-            margin-top: 20px;
-            border: 1px solid black;
-            max-width: 100%;
-            height: auto;
-        }
-        #output {
-            margin-top: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: green;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #app { display: none; }
+        #video { width: 100%; height: auto; border: 1px solid black; margin-bottom: 20px; }
+        #output { margin-top: 20px; font-size: 1.2em; font-weight: bold; color: green; }
     </style>
 </head>
 <body>
-    <h1>Tomar Foto y Leer Código QR</h1>
-    <video id="video" autoplay playsinline></video>
-    <button id="take-photo">Tomar Foto</button>
-    <canvas id="canvas"></canvas>
-    <img id="photo" src="" alt="Foto tomada">
-    <div id="output">Esperando código QR...</div>
+
+    <!-- Formulario de registro -->
+    <div id="auth">
+        <h1>Registrarse / Iniciar Sesión</h1>
+        <div id="register-form">
+            <h2>Registro</h2>
+            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
+            <input type="password" id="register-password" placeholder="Contraseña" required><br>
+            <button id="register-btn">Registrar</button>
+        </div>
+
+        <div id="login-form">
+            <h2>Iniciar Sesión</h2>
+            <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
+            <input type="password" id="login-password" placeholder="Contraseña" required><br>
+            <button id="login-btn">Iniciar Sesión</button>
+        </div>
+    </div>
+
+    <!-- Aplicación principal -->
+    <div id="app">
+        <h1>Bienvenido, <span id="user-name"></span></h1>
+        <p>Marcador: <span id="score">0</span></p>
+        <video id="video" autoplay playsinline></video>
+        <button id="take-photo">Escanear Código QR</button>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <img id="photo" src="" alt="Foto tomada" style="display: none;">
+        <div id="output">Esperando código QR...</div>
+    </div>
 
     <!-- Incluye la biblioteca jsQR -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
 
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const photo = document.getElementById('photo');
-        const takePhotoButton = document.getElementById('take-photo');
-        const output = document.getElementById('output');
-
-        // Accede a la cámara trasera si está disponible
-        navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: { ideal: "environment" } } 
-        })
-        .then(stream => {
-            video.srcObject = stream;
-        })
-        .catch(error => {
-            console.error('Error al acceder a la cámara: ', error);
-            alert('No se puede acceder a la cámara, verifica los permisos.');
-        });
-
-        takePhotoButton.addEventListener('click', () => {
-            // Configura el canvas para el tamaño del video
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-
-            // Dibuja la imagen del video en el canvas
-            const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // Muestra la foto tomada
-            photo.src = canvas.toDataURL('image/png');
-
-            // Lee la imagen en formato de píxeles
-            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            
-            // Decodifica el código QR usando jsQR
-            const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
-
-            if (qrCode) {
-                // Si se detecta un código QR, muestra el mensaje
-                output.textContent = `Código QR detectado: ${qrCode.data}`;
-            } else {
-                // Si no se detecta ningún código QR
-                output.textContent = 'No se detectó ningún código QR.';
-            }
-        });
-    </script>
+    <!-- Incluye Firebase SDK -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
