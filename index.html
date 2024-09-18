@@ -6,6 +6,7 @@
     <title>Escaneo de Código QR</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
+        #auth { display: block; }
         #app { display: none; }
         #video { width: 100%; height: auto; border: 1px solid black; margin-bottom: 20px; }
         #output { margin-top: 20px; font-size: 1.2em; font-weight: bold; color: green; }
@@ -13,12 +14,25 @@
     <script type="module" src="script.js"></script>
 </head>
 <body>
-    <!-- Pantalla de inicio de sesión -->
+    <!-- Pantalla de autenticación (registro e inicio de sesión) -->
     <div id="auth">
-        <h1>Iniciar Sesión</h1>
-        <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
-        <input type="password" id="login-password" placeholder="Contraseña" required><br>
-        <button id="login-btn">Iniciar Sesión</button>
+        <h1>Autenticación</h1>
+
+        <!-- Formulario de registro -->
+        <div id="register-form">
+            <h2>Registro</h2>
+            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
+            <input type="password" id="register-password" placeholder="Contraseña" required><br>
+            <button id="register-btn">Registrar</button>
+        </div>
+
+        <!-- Formulario de inicio de sesión -->
+        <div id="login-form">
+            <h2>Iniciar Sesión</h2>
+            <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
+            <input type="password" id="login-password" placeholder="Contraseña" required><br>
+            <button id="login-btn">Iniciar Sesión</button>
+        </div>
     </div>
 
     <!-- Aplicación principal -->
