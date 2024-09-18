@@ -42,10 +42,8 @@ function startCamera() {
 async function saveScore(userId, newScore) {
     const userDoc = doc(db, "users", userId);
     try {
-        // Actualiza el marcador del usuario
         await updateDoc(userDoc, { score: newScore });
     } catch (error) {
-        // Si el usuario no existe, lo crea con el marcador inicial
         await setDoc(userDoc, { score: newScore });
     }
 }
@@ -58,7 +56,7 @@ async function getUserScore(userId) {
     if (docSnap.exists()) {
         return docSnap.data().score;
     } else {
-        return 0; // Si no tiene marcador, se inicia en 0
+        return 0;
     }
 }
 
@@ -69,7 +67,6 @@ document.getElementById('register-btn').addEventListener('click', () => {
 
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-        // Registro exitoso
         const user = userCredential.user;
         alert('Registro exitoso. Ahora puedes iniciar sesión.');
         console.log('Usuario registrado:', user.email);
@@ -87,13 +84,11 @@ document.getElementById('login-btn').addEventListener('click', async () => {
 
     signInWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
-        // Inicio de sesión exitoso
         const user = userCredential.user;
         document.getElementById('auth').style.display = 'none';
         document.getElementById('app').style.display = 'block';
         document.getElementById('user-name').textContent = user.email;
         
-        // Obtiene el marcador del usuario desde Firestore
         score = await getUserScore(user.uid);
         scoreDisplay.textContent = score;
 
@@ -124,7 +119,6 @@ document.getElementById('take-photo').addEventListener('click', () => {
         }
         scoreDisplay.textContent = score;
 
-        // Guarda el marcador actualizado en Firestore
         const userId = auth.currentUser.uid;
         saveScore(userId, score);
     } else {
