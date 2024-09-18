@@ -18,7 +18,9 @@ function showAchievement() {
     // Mostrar mensaje de logro
     const output = document.getElementById("output");
     output.textContent = "¡Has reunido 5 compras, ahora puedes canjear este logro por un café!";
-    output.classList.add("achievement");
+    output.style.color = "#5f72ff"; // Color azul para el texto
+    output.style.fontSize = "1.5em"; // Tamaño más grande
+    output.style.fontWeight = "bold";
 
     // Mostrar confeti
     launchConfetti();
