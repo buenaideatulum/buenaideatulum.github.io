@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
 
 // Configuración de Firebase
@@ -35,6 +35,24 @@ function startCamera() {
         alert('No se puede acceder a la cámara, verifica los permisos.');
     });
 }
+
+// Registro de usuario
+document.getElementById('register-btn').addEventListener('click', () => {
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Registro exitoso
+        const user = userCredential.user;
+        alert('Registro exitoso. Ahora puedes iniciar sesión.');
+        console.log('Usuario registrado:', user.email);
+    })
+    .catch((error) => {
+        alert('Error al registrarse: ' + error.message);
+        console.error('Error al registrarse:', error);
+    });
+});
 
 // Inicio de sesión
 document.getElementById('login-btn').addEventListener('click', () => {
