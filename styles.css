@@ -1,74 +1,82 @@
-body {
-    background: linear-gradient(135deg, #e0f7fa, #b2ebf2); /* Degradado azul claro */
-    font-family: 'Arial', sans-serif;
+/* General Glassmorphism styles */
+.glass {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 20px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de la pantalla de autenticación */
+#auth {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
-    overflow: hidden;
+    background: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
 }
 
-#auth, #app {
-    backdrop-filter: blur(15px);
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+#login-form, #register-form {
+    width: 300px;
     padding: 20px;
-    max-width: 400px;
-    width: 100%;
     text-align: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: 20px;
 }
 
-h1, p {
-    color: #ffffff;
-    text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+#login-form.glass, #register-form.glass {
+    padding: 40px;
+}
+
+/* Pantalla de escaneo */
+#app {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+/* Estilos adicionales para botones y campos */
+input[type="email"], input[type="password"], button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
 }
 
 button {
-    padding: 12px 24px;
-    margin-top: 10px;
-    font-size: 1em;
-    color: #ffffff;
-    background: rgba(0, 153, 255, 0.7);
-    border: none;
-    border-radius: 10px;
+    background-color: #5f72ff;
+    color: white;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background: rgba(0, 153, 255, 0.9);
+    background-color: #4154ff;
 }
 
-#score {
-    font-size: 2em;
-    color: #ffffff;
-    margin-bottom: 20px;
-    padding: 10px;
-    background: rgba(0, 153, 255, 0.3);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    display: inline-block;
-    width: 80px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-#output {
-    background: rgba(0, 153, 255, 0.5);
-    border-radius: 15px;
-    padding: 20px;
-    color: #ffffff;
-    font-size: 1.2em;
+video {
+    width: 100%;
+    height: auto;
     margin-top: 20px;
-    text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+}
+
+canvas {
     display: none;
 }
 
-#confettiCanvas {
-    z-index: 1000;
+#output {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #5f72ff;
+}
+
+#score {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ff5e78;
 }
