@@ -63,15 +63,9 @@ button:hover {
     margin-top: 20px;
     text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     display: none;
-}
-
-#output.achievement {
-    display: block;
-    color: #007bff; /* Azul agradable */
-    font-size: 1.5em;
-    font-weight: bold;
-    text-align: center;
-    margin: 0 auto;
+    background: linear-gradient(135deg, #a2c2e0, #1e3a8a); /* Azul degradado */
+    color: #ffffff; /* Texto blanco para contraste */
+    border: 2px solid #1e3a8a; /* Borde azul oscuro */
 }
 
 #confettiCanvas {
