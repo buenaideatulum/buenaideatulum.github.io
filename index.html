@@ -11,33 +11,29 @@
 </head>
 <body>
     <!-- Pantalla de autenticación (registro e inicio de sesión) -->
-    <div id="auth">
-        <h1>Autenticación</h1>
-
-        <!-- Formulario de registro -->
-        <div id="register-form">
-            <h2>Registro</h2>
-            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
-            <input type="password" id="register-password" placeholder="Contraseña" required><br>
-            <button id="register-btn">Registrar</button>
-        </div>
-
-        <!-- Formulario de inicio de sesión -->
-        <div id="login-form">
+    <div id="auth" class="glass">
+        <div id="login-form" class="glass">
             <h2>Iniciar Sesión</h2>
             <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
             <input type="password" id="login-password" placeholder="Contraseña" required><br>
             <button id="login-btn">Iniciar Sesión</button>
         </div>
+
+        <div id="register-form" class="glass">
+            <h2>Registro</h2>
+            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
+            <input type="password" id="register-password" placeholder="Contraseña" required><br>
+            <button id="register-btn">Registrar</button>
+        </div>
     </div>
 
     <!-- Aplicación principal -->
-    <div id="app">
+    <div id="app" class="glass" style="display: none;">
         <h1>Bienvenido, <span id="user-name"></span></h1>
         <p>Marcador: <span id="score">0</span></p>
         <video id="video" autoplay playsinline></video>
         <button id="take-photo">Escanear Código QR</button>
-        <canvas id="canvas" style="display: none;"></canvas>
+        <canvas id="canvas"></canvas>
         <div id="output">Esperando código QR...</div>
     </div>
 </body>
