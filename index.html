@@ -4,70 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escaneo de Código QR</title>
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            background-color: #f0f0f0; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        #auth { 
-            display: block; 
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-        }
-        #register-form, #login-form {
-            margin-bottom: 20px;
-        }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: none;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            font-weight: bold;
-        }
-        #app { display: none; }
-        #video { width: 100%; height: auto; border: 1px solid black; margin-bottom: 20px; }
-        #output { margin-top: 20px; font-size: 1.2em; font-weight: bold; color: green; }
-    </style>
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
 </head>
 <body>
-    <!-- Pantalla de autenticación (registro e inicio de sesión) -->
-    <div id="auth">
-        <h1>Autenticación</h1>
-
-        <!-- Formulario de registro -->
-        <div id="register-form">
-            <h2>Registro</h2>
-            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
-            <input type="password" id="register-password" placeholder="Contraseña" required><br>
-            <button id="register-btn">Registrar</button>
-        </div>
-
-        <!-- Formulario de inicio de sesión -->
-        <div id="login-form">
-            <h2>Iniciar Sesión</h2>
-            <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
-            <input type="password" id="login-password" placeholder="Contraseña" required><br>
-            <button id="login-btn">Iniciar Sesión</button>
-        </div>
-    </div>
-
     <!-- Aplicación principal -->
     <div id="app">
         <h1>Bienvenido, <span id="user-name"></span></h1>
@@ -75,11 +17,7 @@
         <video id="video" autoplay playsinline></video>
         <button id="take-photo">Escanear Código QR</button>
         <canvas id="canvas" style="display: none;"></canvas>
-        <img id="photo" src="" alt="Foto tomada" style="display: none;">
         <div id="output">Esperando código QR...</div>
     </div>
-
-    <!-- Incluye la biblioteca jsQR -->
-    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
 </body>
 </html>
