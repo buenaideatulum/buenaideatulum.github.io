@@ -1,43 +1,51 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 100%);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
 }
 
-#loginDiv, #scannerDiv {
-    background-color: white;
+#app, #auth {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    width: 90%;
+    max-width: 500px;
+    color: white;
 }
 
-input {
-    width: 100%;
+input, button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 10px;
     padding: 10px;
     margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    color: white;
+    width: 100%;
 }
 
 button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
     cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
-#resetBtn {
-    margin-top: 20px;
-    background-color: green;
+#video {
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#output {
+    background: rgba(0, 255, 0, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
 }
