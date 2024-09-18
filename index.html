@@ -4,130 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escaneo de Código QR</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="module" src="script.js"></script>
     <style>
-        /* Estilos generales */
-        body {
-            font-family: Arial, sans-serif;
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background-color: #f0f0f0; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
         }
-
-        /* General Glassmorphism styles */
-        .glass {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
+        #auth { 
+            display: block; 
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 20px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
         }
-
-        /* Estilo de la pantalla de autenticación */
-        #auth {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        #register-form, #login-form {
+            margin-bottom: 20px;
         }
-
-        #login-form, #register-form {
-            width: 300px;
-            text-align: center;
-            margin: 20px;
-        }
-
-        #login-form.glass, #register-form.glass {
-            padding: 40px;
-        }
-
-        /* Pantalla de escaneo */
-        #app {
-            display: none;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-        }
-
-        /* Estilos adicionales para botones y campos */
-        input[type="email"], input[type="password"], button {
+        input, button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border: none;
             border-radius: 8px;
+            border: none;
         }
-
         button {
-            background-color: #5f72ff;
+            background-color: #007BFF;
             color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #4154ff;
-        }
-
-        video {
-            width: 100%;
-            height: auto;
-            margin-top: 20px;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-        }
-
-        canvas {
-            display: none;
-        }
-
-        #output {
-            margin-top: 20px;
-            font-size: 1.2em;
             font-weight: bold;
-            color: green;
         }
-
-        #score {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #ff5e78;
-        }
+        #app { display: none; }
+        #video { width: 100%; height: auto; border: 1px solid black; margin-bottom: 20px; }
+        #output { margin-top: 20px; font-size: 1.2em; font-weight: bold; color: green; }
     </style>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="script.js"></script>
 </head>
 <body>
-
     <!-- Pantalla de autenticación (registro e inicio de sesión) -->
     <div id="auth">
-        <div id="login-form" class="glass">
-            <h2>Iniciar Sesión</h2>
-            <input type="email" id="login-email" placeholder="Correo electrónico" />
-            <input type="password" id="login-password" placeholder="Contraseña" />
-            <button id="login-btn">Ingresar</button>
+        <h1>Autenticación</h1>
+
+        <!-- Formulario de registro -->
+        <div id="register-form">
+            <h2>Registro</h2>
+            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
+            <input type="password" id="register-password" placeholder="Contraseña" required><br>
+            <button id="register-btn">Registrar</button>
         </div>
 
-        <div id="register-form" class="glass">
-            <h2>Registrarse</h2>
-            <input type="email" id="register-email" placeholder="Correo electrónico" />
-            <input type="password" id="register-password" placeholder="Contraseña" />
-            <button id="register-btn">Registrar</button>
+        <!-- Formulario de inicio de sesión -->
+        <div id="login-form">
+            <h2>Iniciar Sesión</h2>
+            <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
+            <input type="password" id="login-password" placeholder="Contraseña" required><br>
+            <button id="login-btn">Iniciar Sesión</button>
         </div>
     </div>
 
     <!-- Aplicación principal -->
-    <div id="app" class="glass">
+    <div id="app">
         <h1>Bienvenido, <span id="user-name"></span></h1>
         <p>Marcador: <span id="score">0</span></p>
         <video id="video" autoplay playsinline></video>
         <button id="take-photo">Escanear Código QR</button>
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <img id="photo" src="" alt="Foto tomada" style="display: none;">
         <div id="output">Esperando código QR...</div>
     </div>
 
