@@ -1,37 +1,81 @@
-// Función para obtener la fecha actual en formato YYYY-MM-DD
-function getTodayDate() {
-    const today = new Date();
-    return today.toISOString().split('T')[0]; // Formato: YYYY-MM-DD
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
+
+// Configuración de Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyDJg1Kag-ttvBkWI-AO2Mvsj4GnSRbd74E",
+    authDomain: "authenticationqr-a08d4.firebaseapp.com",
+    projectId: "authenticationqr-a08d4",
+    storageBucket: "authenticationqr-a08d4.appspot.com",
+    messagingSenderId: "230256201537",
+    appId: "1:230256201537:web:7696b4351c13d4e95a9bc0",
+    measurementId: "G-LQD0PNH8PT"
+};
+
+// Inicializa Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const analytics = getAnalytics(app);
+
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const output = document.getElementById('output');
+const scoreDisplay = document.getElementById('score');
+let score = 0;
+
+// Función para acceder a la cámara trasera
+function startCamera() {
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } } })
+    .then(stream => {
+        video.srcObject = stream;
+    })
+    .catch(error => {
+        console.error('Error al acceder a la cámara: ', error);
+        alert('No se puede acceder a la cámara, verifica los permisos.');
+    });
 }
 
-// Función para guardar el marcador del usuario y la última fecha de escaneo en Firestore
-async function saveScore(userId, newScore) {
-    const userDoc = doc(db, "users", userId);
-    const today = getTodayDate();
-    try {
-        // Actualiza el marcador del usuario y la fecha del último escaneo
-        await updateDoc(userDoc, { score: newScore, lastScanned: today });
-    } catch (error) {
-        // Si el usuario no existe, lo crea con el marcador inicial y la fecha del último escaneo
-        await setDoc(userDoc, { score: newScore, lastScanned: today });
-    }
-}
+// Registro de usuario
+document.getElementById('register-btn').addEventListener('click', () => {
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
 
-// Función para obtener el marcador y la última fecha de escaneo del usuario desde Firestore
-async function getUserScore(userId) {
-    const userDoc = doc(db, "users", userId);
-    const docSnap = await getDoc(userDoc);
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Registro exitoso
+        const user = userCredential.user;
+        alert('Registro exitoso. Ahora puedes iniciar sesión.');
+        console.log('Usuario registrado:', user.email);
+    })
+    .catch((error) => {
+        alert('Error al registrarse: ' + error.message);
+        console.error('Error al registrarse:', error);
+    });
+});
 
-    if (docSnap.exists()) {
-        const data = docSnap.data();
-        return { score: data.score, lastScanned: data.lastScanned };
-    } else {
-        return { score: 0, lastScanned: null }; // Si no tiene marcador, se inicia en 0
-    }
-}
+// Inicio de sesión
+document.getElementById('login-btn').addEventListener('click', () => {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Inicio de sesión exitoso
+        const user = userCredential.user;
+        document.getElementById('auth').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('user-name').textContent = user.email;
+        startCamera();
+    })
+    .catch((error) => {
+        alert('Error al iniciar sesión: ' + error.message);
+        console.error('Error al iniciar sesión:', error);
+    });
+});
 
 // Función para escanear QR
-document.getElementById('take-photo').addEventListener('click', async () => {
+document.getElementById('take-photo').addEventListener('click', () => {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const context = canvas.getContext('2d');
@@ -40,28 +84,14 @@ document.getElementById('take-photo').addEventListener('click', async () => {
     const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
 
     if (qrCode) {
-        const userId = auth.currentUser.uid;
-        const { score, lastScanned } = await getUserScore(userId);
-        const today = getTodayDate();
-
-        // Verifica si ya se escaneó un QR hoy
-        if (lastScanned === today) {
-            alert('Ya has escaneado un código hoy. Intenta de nuevo mañana.');
-        } else {
-            if (score < 5) {
-                score++; // Solo suma si el marcador es menor a 5
-                if (score === 5) {
-                    alert('Felicidades, tienes un café gratis');
-                }
-            } else {
-                alert('Tu marcador ya está en 5, ¡disfruta tu café gratis!');
-            }
-            
-            scoreDisplay.textContent = score;
-            saveScore(userId, score);
-        }
-
         output.textContent = `Código QR detectado: ${qrCode.data}`;
+        if (qrCode.data === "1") {
+            score++;
+        } else if (qrCode.data === "0") {
+            score = 0;
+            alert('¡Lo lograste! Tienes un café gratis hoy.');
+        }
+        scoreDisplay.textContent = score;
     } else {
         output.textContent = 'No se detectó ningún código QR.';
     }
