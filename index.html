@@ -1,137 +1,82 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script type="module">
+        // Importa las funciones necesarias de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJg1Kag-ttvBkWI-AO2Mvsj4GnSRbd74E",
+            authDomain: "authenticationqr-a08d4.firebaseapp.com",
+            projectId: "authenticationqr-a08d4",
+            storageBucket: "authenticationqr-a08d4.appspot.com",
+            messagingSenderId: "230256201537",
+            appId: "1:230256201537:web:7696b4351c13d4e95a9bc0",
+            measurementId: "G-LQD0PNH8PT"
+        };
+
+        // Inicializa Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escaneo de Código QR</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="module" src="script.js"></script>
-    <style>
-        /* Estilos generales */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
-        }
-
-        /* General Glassmorphism styles */
-        .glass {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 20px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Estilo de la pantalla de autenticación */
-        #auth {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        #login-form, #register-form {
-            width: 300px;
-            text-align: center;
-            margin: 20px;
-        }
-
-        #login-form.glass, #register-form.glass {
-            padding: 40px;
-        }
-
-        /* Pantalla de escaneo */
-        #app {
-            display: none;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-        }
-
-        /* Estilos adicionales para botones y campos */
-        input[type="email"], input[type="password"], button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 8px;
-        }
-
-        button {
-            background-color: #5f72ff;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #4154ff;
-        }
-
-        video {
-            width: 100%;
-            height: auto;
-            margin-top: 20px;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-        }
-
-        canvas {
-            display: none;
-        }
-
-        #output {
-            margin-top: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: green;
-        }
-
-        #score {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #ff5e78;
-        }
-    </style>
+    <title>Registro e Inicio de Sesión</title>
 </head>
 <body>
 
-    <!-- Pantalla de autenticación (registro e inicio de sesión) -->
-    <div id="auth">
-        <div id="login-form" class="glass">
-            <h2>Iniciar Sesión</h2>
-            <input type="email" id="login-email" placeholder="Correo electrónico" />
-            <input type="password" id="login-password" placeholder="Contraseña" />
-            <button id="login-btn">Ingresar</button>
-        </div>
+    <!-- Formulario de inicio de sesión -->
+    <h2>Iniciar Sesión</h2>
+    <form id="login-form">
+        <input type="email" id="email-login" placeholder="Correo electrónico" required>
+        <input type="password" id="password-login" placeholder="Contraseña" required>
+        <button type="submit">Iniciar Sesión</button>
+    </form>
 
-        <div id="register-form" class="glass">
-            <h2>Registrarse</h2>
-            <input type="email" id="register-email" placeholder="Correo electrónico" />
-            <input type="password" id="register-password" placeholder="Contraseña" />
-            <button id="register-btn">Registrar</button>
-        </div>
-    </div>
+    <!-- Formulario de registro -->
+    <h2>Registrarse</h2>
+    <form id="register-form">
+        <input type="email" id="email-register" placeholder="Correo electrónico" required>
+        <input type="password" id="password-register" placeholder="Contraseña" required>
+        <button type="submit">Registrarse</button>
+    </form>
 
-    <!-- Aplicación principal -->
-    <div id="app" class="glass">
-        <h1>Bienvenido, <span id="user-name"></span></h1>
-        <p>Marcador: <span id="score">0</span></p>
-        <video id="video" autoplay playsinline></video>
-        <button id="take-photo">Escanear Código QR</button>
-        <canvas id="canvas"></canvas>
-        <div id="output">Esperando código QR...</div>
-    </div>
+    <p id="error-message"></p>
 
-    <!-- Incluye la biblioteca jsQR -->
-    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script type="module">
+        // Manejo del inicio de sesión
+        document.getElementById("login-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("email-login").value;
+            const password = document.getElementById("password-login").value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("Inicio de sesión exitoso");
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    document.getElementById("error-message").textContent = errorMessage;
+                });
+        });
+
+        // Manejo del registro de usuario
+        document.getElementById("register-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("email-register").value;
+            const password = document.getElementById("password-register").value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("Registro exitoso");
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    document.getElementById("error-message").textContent = errorMessage;
+                });
+        });
+    </script>
 </body>
 </html>
