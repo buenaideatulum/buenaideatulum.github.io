@@ -1,52 +1,82 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script type="module">
+        // Importa las funciones necesarias de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJg1Kag-ttvBkWI-AO2Mvsj4GnSRbd74E",
+            authDomain: "authenticationqr-a08d4.firebaseapp.com",
+            projectId: "authenticationqr-a08d4",
+            storageBucket: "authenticationqr-a08d4.appspot.com",
+            messagingSenderId: "230256201537",
+            appId: "1:230256201537:web:7696b4351c13d4e95a9bc0",
+            measurementId: "G-LQD0PNH8PT"
+        };
+
+        // Inicializa Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escaneo de Código QR</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        #auth { display: block; }
-        #app { display: none; }
-        #video { width: 100%; height: auto; border: 1px solid black; margin-bottom: 20px; }
-        #output { margin-top: 20px; font-size: 1.2em; font-weight: bold; color: green; }
-    </style>
-    <script type="module" src="script.js"></script>
+    <title>Registro e Inicio de Sesión</title>
 </head>
 <body>
-    <!-- Pantalla de autenticación (registro e inicio de sesión) -->
-    <div id="auth">
-        <h1>Autenticación</h1>
 
-        <!-- Formulario de registro -->
-        <div id="register-form">
-            <h2>Registro</h2>
-            <input type="email" id="register-email" placeholder="Correo electrónico" required><br>
-            <input type="password" id="register-password" placeholder="Contraseña" required><br>
-            <button id="register-btn">Registrar</button>
-        </div>
+    <!-- Formulario de inicio de sesión -->
+    <h2>Iniciar Sesión</h2>
+    <form id="login-form">
+        <input type="email" id="email-login" placeholder="Correo electrónico" required>
+        <input type="password" id="password-login" placeholder="Contraseña" required>
+        <button type="submit">Iniciar Sesión</button>
+    </form>
 
-        <!-- Formulario de inicio de sesión -->
-        <div id="login-form">
-            <h2>Iniciar Sesión</h2>
-            <input type="email" id="login-email" placeholder="Correo electrónico" required><br>
-            <input type="password" id="login-password" placeholder="Contraseña" required><br>
-            <button id="login-btn">Iniciar Sesión</button>
-        </div>
-    </div>
+    <!-- Formulario de registro -->
+    <h2>Registrarse</h2>
+    <form id="register-form">
+        <input type="email" id="email-register" placeholder="Correo electrónico" required>
+        <input type="password" id="password-register" placeholder="Contraseña" required>
+        <button type="submit">Registrarse</button>
+    </form>
 
-    <!-- Aplicación principal -->
-    <div id="app">
-        <h1>Bienvenido, <span id="user-name"></span></h1>
-        <p>Marcador: <span id="score">0</span></p>
-        <video id="video" autoplay playsinline></video>
-        <button id="take-photo">Escanear Código QR</button>
-        <canvas id="canvas" style="display: none;"></canvas>
-        <img id="photo" src="" alt="Foto tomada" style="display: none;">
-        <div id="output">Esperando código QR...</div>
-    </div>
+    <p id="error-message"></p>
 
-    <!-- Incluye la biblioteca jsQR -->
-    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script type="module">
+        // Manejo del inicio de sesión
+        document.getElementById("login-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("email-login").value;
+            const password = document.getElementById("password-login").value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("Inicio de sesión exitoso");
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    document.getElementById("error-message").textContent = errorMessage;
+                });
+        });
+
+        // Manejo del registro de usuario
+        document.getElementById("register-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("email-register").value;
+            const password = document.getElementById("password-register").value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("Registro exitoso");
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    document.getElementById("error-message").textContent = errorMessage;
+                });
+        });
+    </script>
 </body>
 </html>
