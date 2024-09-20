@@ -12,7 +12,6 @@
 /* Estilo de la pantalla de autenticación */
 #auth {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
