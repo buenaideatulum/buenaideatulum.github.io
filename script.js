@@ -93,7 +93,9 @@ document.getElementById('login-btn').addEventListener('click', async () => {
         document.getElementById('app').style.display = 'block';
         document.getElementById('user-name').textContent = user.email;
         
-        // Obtiene el marcador del usuario desde Firestore
+        // Mensaje de depuración
+        console.log('Pantalla de Autenticación oculta y Pantalla de Escaneo mostrada.');
+
         score = await getUserScore(user.uid);
         scoreDisplay.textContent = score;
 
