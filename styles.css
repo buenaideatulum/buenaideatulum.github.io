@@ -73,6 +73,11 @@ canvas {
     font-size: 1.2em;
     font-weight: bold;
     color: green;
+/* Para pantallas pequeñas, organizamos los formularios en columna */
+@media (max-width: 768px) {
+    #auth {
+        flex-direction: column;
+    }
 }
 
 #score {
