@@ -122,12 +122,6 @@ document.getElementById('take-photo').addEventListener('click', () => {
             if (score < 5) {  // Verifica si el score es menor a 5
                 score++;      // Incrementa el score
             }
-             } else if (score === 5) {
-            // Mostrar el mensaje de felicitación
-            const messageContent = document.getElementById('message-content');
-            messageContent.textContent = "¡Felicidades! Has juntado 5 puntos, ¡tienes un café gratis!";
-            document.getElementById('congrats-message').style.display = 'block';
-        }
         } else if (qrCode.data === "0") {
             score = 0;      // Reinicia el score
             alert('¡Lo lograste! Tienes un café gratis hoy.');
