@@ -109,6 +109,14 @@ document.getElementById('login-btn').addEventListener('click', async () => {
 
 // Función para escanear QR
 document.getElementById('take-photo').addEventListener('click', () => {
+    if (score >= 5) {
+        // Si el score ya llegó a 5, muestra el mensaje de felicitaciones
+        document.getElementById('congrats-message').style.display = 'block';
+        document.getElementById('congrats-text').style.display = 'block';
+        return; // Detiene la ejecución del escaneo si ya llegó a 5
+    }
+
+    // Si no ha llegado a 5, procede a escanear el código QR
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const context = canvas.getContext('2d');
