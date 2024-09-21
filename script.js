@@ -116,12 +116,14 @@ document.getElementById('take-photo').addEventListener('click', () => {
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
 
-    if (qrCode) {
+  if (qrCode) {
         output.textContent = `Código QR detectado: ${qrCode.data}`;
         if (qrCode.data === "1") {
-            score++;
+            if (score < 5) {  // Verifica si el score es menor a 5
+                score++;      // Incrementa el score
+            }
         } else if (qrCode.data === "0") {
-            score = 0;
+            score = 0;      // Reinicia el score
             alert('¡Lo lograste! Tienes un café gratis hoy.');
         }
         scoreDisplay.textContent = score;
