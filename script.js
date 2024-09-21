@@ -125,6 +125,8 @@ document.getElementById('take-photo').addEventListener('click', () => {
                 const messageContent = document.getElementById('message-content');
                 messageContent.textContent = "¡Felicidades! Has juntado 5 puntos, ¡tienes un café gratis!";
                 document.getElementById('congrats-message').style.display = 'block';
+                    // Mostrar el texto adicional
+    document.getElementById('congrats-text').style.display = 'block';
             }
         }
     } else if (qrCode.data === "0") {
