@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Califica tu experiencia</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary: #fbbc04;
@@ -49,6 +47,7 @@
       cursor: pointer;
       transition: transform 0.2s ease, color 0.2s ease;
       color: #ccc;
+      user-select: none;
     }
     .star.selected {
       color: var(--primary);
@@ -83,13 +82,14 @@
     <span class="star" onclick="rate(5)">★</span>
   </div>
 
-  <footer>
-    Tu opinión nos ayuda a mejorar 💛
-  </footer>
+  <footer>Tu opinión nos ayuda a mejorar 💛</footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-database-compat.js"></script>
 
   <script>
-    // Configuración Firebase
-    var firebaseConfig = {
+    // Config Firebase (ajusta según tu configuración)
+    const firebaseConfig = {
       apiKey: "AIzaSyC1jYCINtfyrdc2-0sOEe-LkJxpck1ZEGU",
       authDomain: "nfc-calificaciones.firebaseapp.com",
       databaseURL: "https://nfc-calificaciones-default-rtdb.firebaseio.com",
@@ -99,45 +99,57 @@
       appId: "1:401919272910:web:40db9a3ce50a6a2b48ad9f",
       measurementId: "G-8PQW1W9GQW"
     };
+
+    // Inicializa Firebase
     firebase.initializeApp(firebaseConfig);
-    var database = firebase.database();
+    const database = firebase.database();
 
     const stars = document.querySelectorAll('.star');
 
+    function getDeviceName() {
+      const ua = navigator.userAgent;
+      if (/iPhone/i.test(ua)) return "iPhone";
+      if (/iPad/i.test(ua)) return "iPad";
+      if (/Android/i.test(ua)) return "Android";
+      if (/Windows/i.test(ua)) return "Windows PC";
+      if (/Macintosh/i.test(ua)) return "Mac";
+      return "Otro dispositivo";
+    }
+
     function rate(starIndex) {
-      // Selección visual
+      // Visualizar estrellas seleccionadas
       stars.forEach((star, index) => {
-        if (index < starIndex) {
-          star.classList.add('selected');
-        } else {
-          star.classList.remove('selected');
-        }
+        star.classList.toggle('selected', index < starIndex);
       });
 
-      // Enviar mensaje a Telegram directamente
+      const device = getDeviceName();
+      const icon = (starIndex <= 3) ? "❌" : "✅";
+
       const token = "8374193660:AAGC1hPrKY1qBNli-QblOssUJf4cHMhNfLc";
       const chat_id = "1917434175";
-      const message = `✅ Nueva calificación:\n⭐ Estrellas: ${starIndex}\n📱 Desde: ${navigator.userAgent}`;
+      const message = `${icon} Nueva calificación:\n⭐ Estrellas: ${starIndex}\n📱 Desde: ${device}`;
 
-      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chat_id,
-          text: message
-        })
-      }).catch(error => {
-        console.error('Error enviando a Telegram', error);
-      });
+      // Enviar mensaje vía Cloudflare Worker (reemplaza la URL si cambia)
+      fetch("https://weathered-fire-4d18.diegoalvear92.workers.dev/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id, token, text: message })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Error enviando mensaje");
+        return res.text();
+      })
+      .catch(err => console.error("Error enviando a Telegram:", err));
 
-      // Guardar en Firebase
-      var timestamp = Date.now();
+      // Guardar en Firebase Realtime DB
+      const timestamp = Date.now();
       database.ref('calificaciones/' + timestamp).set({
         estrellas: starIndex,
-        fecha: new Date().toISOString()
+        fecha: new Date().toISOString(),
+        dispositivo: device
       });
 
-      // Redirección
+      // Redirigir según calificación después de un pequeño delay
       setTimeout(() => {
         if (starIndex <= 3) {
           window.location.href = "https://forms.gle/DCJ1YSbe6h6c8sSx9";
